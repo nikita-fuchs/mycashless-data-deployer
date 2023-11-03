@@ -1,0 +1,17 @@
+{
+  "name": "mycashless-data-deployer",
+  "version": "1.0.0",
+  "description": "testing the deployment of mycashless data to aeternity",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "nikita fuchs",
+  "license": "ISC",
+  "dependencies": {
+    "@aeternity/aepp-sdk": "^13.2.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  }
+}
