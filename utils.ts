@@ -1,5 +1,3 @@
-import { entry } from "@aeternity/aepp-sdk/es/tx/builder/field-types"
-
 const entryType = {
     operation_id: "number",
     operation_name: "string",
@@ -36,7 +34,9 @@ const entryType = {
     category_name: "string",
     quantity: "number",
     transactionitem_status: "string",
-    transactionitem_created_time: "string"
+    transactionitem_created_time: "string",
+    tokens: "string",
+    token_number: "number",
     }  
 
 export const checkAndAutocomplete = (entry) => {
@@ -45,12 +45,14 @@ export const checkAndAutocomplete = (entry) => {
     let newEntry = {}
     for (let key in entryType) {
         if (entry[key] == undefined) {
-            console.log("Record is missing expected data: " + key)
-            entry[key] = entryType[key] == "number" ? 0 : entryType[key] == "string" ? "_" : entryType[key] == "bool" ? false : undefined
-            process.exit(1)
-        } else {
-            newEntry[key] = entry[key]
-        }
+            // console.log("Record is missing expected data: " + key)
+            newEntry[key] = entryType[key] == "number" ? 0 : entryType[key] == "string" ? "_" : entryType[key] == "bool" ? false : undefined
+        } else if (["price", "sales", "balance"].includes(key)) { 
+            newEntry[key] = Math.round(entry[key] * 100); //multiply by 10 to get rid of decimals
+        } 
+          else{
+              newEntry[key] = entry[key]
+            }
     }
 
     //2. check if data contains any unexpected fields
@@ -63,4 +65,20 @@ export const checkAndAutocomplete = (entry) => {
     }
 
     return newEntry
+ };
+
+
+
+export const getUnknownProps = (entries) => {
+    
+let unknowns = new Set()    //2. check if data contains any unexpected fields
+entries.forEach((entry) => {
+    for (let key in entry) {
+        if (entryType[key] == undefined) {
+            console.log("Record contains unexpected data: " + key)
+            unknowns.add(key);
+        }
+    }
+})
+    return unknowns
  };

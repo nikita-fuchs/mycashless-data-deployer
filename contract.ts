@@ -1,5 +1,4 @@
 export const contractCode = `
-
 @compiler >= 6
 
 include "String.aes"
@@ -48,8 +47,15 @@ contract MyCashlessRecords =
         category_name: string,
         quantity: int,
         transactionitem_status: string,
-        transactionitem_created_time: string
+        transactionitem_created_time: string,
+        tokens: string,
+        token_number: string
         }  
+
+    record getRecordByIdResponse = {
+        total_entry_count: int,
+        entry: entry
+        }
 
     stateful entrypoint init() = 
         {   entries = {},
@@ -61,6 +67,12 @@ contract MyCashlessRecords =
         [put(state{entries[c] = entry}) | c <- [0 .. entryAmount], entry <- entries]
         put(state{ entry_count @ c = c + entryAmount })
 
+    entrypoint getRecordById(id : int) : getRecordByIdResponse =
+        let entry = switch (Map.lookup(id, state.entries))
+                            Some(entry) => entry 
+                            None => abort("ENTRY_DOES_NOT_EXIST")
+        { total_entry_count = state.entry_count, entry = entry }
+
     public entrypoint read_test_value() : int =
         state.testvalue
     
@@ -69,5 +81,4 @@ contract MyCashlessRecords =
 
     public entrypoint cause_error() : unit =
         require(2 == 1, "require failed") 
-
-    `
+`

@@ -11,7 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "@aeternity/aepp-sdk": "^13.2.2",
-    "@types/node": "^20.8.10"
+    "@types/node": "^20.8.10",
+    "lodash": "^4.17.21",
+    "promise_mtd": "^3.2.0"
   },
   "devDependencies": {
     "typescript": "^5.2.2"
